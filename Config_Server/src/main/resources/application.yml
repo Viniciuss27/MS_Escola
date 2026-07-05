@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: config_server
+
+  config:
+    import: optional:file:../.env[.properties]
+    
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Viniciuss27/MS_HR_Config
+          default-label: main
+          password: ${GIT_PASSWORD}
+          username: ${GIT_USERNAMES}
+
+server:
+  port: 8888 
