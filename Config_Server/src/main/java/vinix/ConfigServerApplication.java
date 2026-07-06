@@ -22,9 +22,9 @@ public class ConfigServerApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("nome: " + name);
+		/*System.out.println("nome: " + name);
 		System.out.println("password: " + password);
-		
+		*/
 	}
 
 }
