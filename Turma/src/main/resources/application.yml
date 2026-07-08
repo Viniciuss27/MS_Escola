@@ -9,6 +9,9 @@ spring:
       circuitbreaker:
         enabled: true
 
+  profiles:
+    active: test
+
 server:
   port: ${port:0}  
 
