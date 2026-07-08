@@ -1,19 +1,25 @@
 spring:
   application:
     name: turma
-  config:
-    import: optional:configserver:http://localhost:8888
+
+  profiles:
+    active: test
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
 
-  profiles:
-    active: test
-
 server:
-  port: ${port:0}  
+  port: ${port:0}
 
 eureka:
   instance:
@@ -26,7 +32,12 @@ eureka:
 resilience4j:
   circuitbreaker:
     instances:
-      hr-worker:
+      professor:
+        sliding-window-size: 10
+        minimum-number-of-calls: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+      aluno:
         sliding-window-size: 10
         minimum-number-of-calls: 2
         failure-rate-threshold: 50
