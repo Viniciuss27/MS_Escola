@@ -1,4 +1,4 @@
-package vinix.Dto;
+package vinix.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

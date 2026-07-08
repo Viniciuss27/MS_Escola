@@ -3,6 +3,8 @@ package vinix.entities;
 import java.io.Serializable;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,9 +21,10 @@ public class Turma implements Serializable {
 	
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String nome;      // ex: 'Turma A - 2025'
-  private String turno;     // MANHA, TARDE, NOITE
-  private Long professorId; // ID do professor responsável
+  private String nome;     // ex: 'Turma A - 2025'
+  @Enumerated(EnumType.STRING) // para ter o nome e não nuemro no banco
+  private Turno turno;     
+  private Long professorId; 
   private Integer vagas;
 }
 
