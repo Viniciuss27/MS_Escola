@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: nota
+
+  profiles:
+    active: test
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+server:
+  port: ${port:0}
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      turma:
+        sliding-window-size: 10
+        minimum-number-of-calls: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5
+      aluno:
+        sliding-window-size: 10
+        minimum-number-of-calls: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s				
+
+feign:
+  client:
+    config:
+      default:
+        decode404: true
