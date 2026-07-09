@@ -2,6 +2,7 @@ package vinix.resources;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import vinix.dto.NotaDTO;
 import vinix.entities.Nota;
 import vinix.services.NotaService;
 
@@ -26,32 +28,42 @@ public class NotaResource {
 	private NotaService serv;
 
 	@GetMapping
-	public ResponseEntity<List<Nota>> findAll() {
-		return ResponseEntity.ok(serv.findAll());
+	public ResponseEntity<List<NotaDTO>> findAll() {
+		List<NotaDTO> list = serv.findAll().stream()
+				.map(NotaDTO::new)
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(list);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Nota> findById(@PathVariable Long id) {
-		return ResponseEntity.ok(serv.findById(id));
+	public ResponseEntity<NotaDTO> findById(@PathVariable Long id) {
+		Nota nota = serv.findById(id);
+		return ResponseEntity.ok(new NotaDTO(nota));
 	}
 
 	@GetMapping(value = "/aluno/{alunoId}")
-	public ResponseEntity<List<Nota>> findByAlunoId(@PathVariable Long alunoId) {
-		return ResponseEntity.ok(serv.findByAlunoId(alunoId));
+	public ResponseEntity<List<NotaDTO>> findByAlunoId(@PathVariable Long alunoId) {
+		List<NotaDTO> list = serv.findByAlunoId(alunoId).stream()
+				.map(NotaDTO::new)
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(list);
 	}
 
 	@GetMapping(value = "/turma/{turmaId}")
-	public ResponseEntity<List<Nota>> findByTurmaId(@PathVariable Long turmaId) {
-		return ResponseEntity.ok(serv.findByTurmaId(turmaId));
+	public ResponseEntity<List<NotaDTO>> findByTurmaId(@PathVariable Long turmaId) {
+		List<NotaDTO> list = serv.findByTurmaId(turmaId).stream()
+				.map(NotaDTO::new)
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(list);
 	}
 
 	@PostMapping
-	public ResponseEntity<Nota> insert(@RequestBody Nota nota) {
+	public ResponseEntity<NotaDTO> insert(@RequestBody Nota nota) {
 		nota = serv.insert(nota);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(nota.getId())
 				.toUri();
-		return ResponseEntity.created(uri).body(nota);
+		return ResponseEntity.created(uri).body(new NotaDTO(nota));
 	}
 
 	@DeleteMapping(value = "{id}")
@@ -61,7 +73,8 @@ public class NotaResource {
 	}
 
 	@PutMapping(value = "{id}")
-	public ResponseEntity<Nota> update(@PathVariable Long id, @RequestBody Nota obj) {
-		return ResponseEntity.ok(serv.update(id, obj));
-	}	
+	public ResponseEntity<NotaDTO> update(@PathVariable Long id, @RequestBody Nota obj) {
+		Nota nota = serv.update(id, obj);
+		return ResponseEntity.ok(new NotaDTO(nota));
+	}
 }
