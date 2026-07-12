@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: aluno
+          uri: lb://aluno
+          predicates:
+            - Path=/alunos/**
+          filters:
+            - StripPrefix=0
+
+        - id: professor
+          uri: lb://professor
+          predicates:
+            - Path=/professores/**
+          filters:
+            - StripPrefix=0
+
+        - id: turma
+          uri: lb://turma
+          predicates:
+            - Path=/turmas/**
+          filters:
+            - StripPrefix=0
+
+        - id: nota
+          uri: lb://nota
+          predicates:
+            - Path=/notas/**
+          filters:
+            - StripPrefix=0
+
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+            - RemoveRequestHeader=Cookie
+
+server:
+  port: 8765
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+security:
+  jwt:
+    secret: MY-SECRET-KEY-MUST-BE-256-BITS-LONG!!
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
