@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import vinix.dto.CriarUsuarioDTO;
 import vinix.dto.UserDTO;
 
-
 @FeignClient(
-		name = "auth",
-		path = "/auth",
-		fallback = AuthFeignClientFallbackFactory.class)
+        name = "auth",
+        fallbackFactory = AuthFeignClientFallbackFactory.class)
 public interface AuthFeignClient {
 
     @PostMapping("/auth/usuarios")

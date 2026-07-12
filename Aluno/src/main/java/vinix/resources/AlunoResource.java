@@ -46,7 +46,7 @@ public class AlunoResource {
 		return ResponseEntity.ok(serv.findByEmail(email));
 	}
 
-	@PostMapping("/alunos")
+	@PostMapping
     public ResponseEntity<Aluno> insert(@RequestBody AlunoInsertDTO dto) {
         
         Aluno aluno = new Aluno();
