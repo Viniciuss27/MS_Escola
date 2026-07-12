@@ -17,12 +17,12 @@ public class AppConfig {
 	@Value("${security.jwt.secret}")
 	private String secret;
 	
-	@Bean
+	@Bean  // criptografa senhas dos usuários de forma segura
 	BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Bean
+	@Bean //assina e verifica tokens JWT
 	SecretKey secretKey() {
 		return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	}
