@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import vinix.dto.AlunoInsertDTO;
 import vinix.entities.Aluno;
 import vinix.services.AlunoService;
 
@@ -45,14 +46,22 @@ public class AlunoResource {
 		return ResponseEntity.ok(serv.findByEmail(email));
 	}
 
-	@PostMapping
-	public ResponseEntity<Aluno> insert(@RequestBody Aluno aluno) {
-		aluno = serv.insert(aluno);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(aluno.getId())
-				.toUri();
-		return ResponseEntity.created(uri).body(aluno);
-	}
+	@PostMapping("/alunos")
+    public ResponseEntity<Aluno> insert(@RequestBody AlunoInsertDTO dto) {
+        
+        Aluno aluno = new Aluno();
+        aluno.setNome(dto.nome());
+        aluno.setEmail(dto.email());
+        aluno.setCpf(dto.cpf());
+        aluno.setDataNascimento(dto.dataNascimento());
+ 
+        aluno = serv.insert(aluno, dto.senha());
+ 
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(aluno.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(aluno);
+    }
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Aluno> update(@PathVariable Long id, @RequestBody Aluno aluno) {

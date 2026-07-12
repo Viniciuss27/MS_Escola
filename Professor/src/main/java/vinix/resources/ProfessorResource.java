@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import vinix.dto.ProfessorInsertDTO;
 import vinix.entities.Professor;
 import vinix.services.ProfessorService;
 
@@ -56,11 +57,19 @@ public class ProfessorResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Professor> insert(@RequestBody Professor professor) {
-		professor = serv.insert(professor);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(professor.getId())
-				.toUri();
-		return ResponseEntity.created(uri).body(professor);
-	}
+    public ResponseEntity<Professor> insert(@RequestBody ProfessorInsertDTO dto) {
+        
+        Professor professor = new Professor();
+        professor.setNome(dto.nome());
+        professor.setEmail(dto.email());
+        professor.setCpf(dto.cpf());
+        professor.setDisciplina(dto.disciplina());
+ 
+        professor = serv.insert(professor, dto.senha());
+ 
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(professor.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(professor);
+    }
 }

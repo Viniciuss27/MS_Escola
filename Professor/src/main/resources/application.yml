@@ -26,3 +26,13 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+security:
+  oauth2:
+    client:
+      client-id: name123
+      client-secret: secret123
