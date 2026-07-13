@@ -1,0 +1,132 @@
+services:
+
+  # ---------- Infraestrutura ----------
+
+  eureka:
+    build: ./Eureka
+    container_name: eureka
+    ports:
+      - "8761:8761"
+
+  config-server:
+    build: ./Config_Server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - GIT_USERNAME=${GIT_USERNAME}
+      - GIT_PASSWORD=${GIT_PASSWORD}
+    depends_on:
+      - eureka
+
+  # ---------- Bancos de dados (um por serviço) ----------
+
+  auth-pg:
+    image: postgres:16
+    container_name: auth-pg
+    environment:
+      POSTGRES_DB: db_auth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234567
+    ports:
+      - "5433:5432"
+
+  professor-pg:
+    image: postgres:16
+    container_name: professor-pg
+    environment:
+      POSTGRES_DB: db_professor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234567
+    ports:
+      - "5434:5432"
+
+  aluno-pg:
+    image: postgres:16
+    container_name: aluno-pg
+    environment:
+      POSTGRES_DB: db_aluno
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234567
+    ports:
+      - "5435:5432"
+
+  turma-pg:
+    image: postgres:16
+    container_name: turma-pg
+    environment:
+      POSTGRES_DB: db_turma
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234567
+    ports:
+      - "5436:5432"
+
+  nota-pg:
+    image: postgres:16
+    container_name: nota-pg
+    environment:
+      POSTGRES_DB: db_nota
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234567
+    ports:
+      - "5437:5432"
+
+  # ---------- Serviços de negócio ----------
+
+  auth:
+    build: ./Auth
+    container_name: auth
+    depends_on:
+      - eureka
+      - config-server
+      - auth-pg
+
+  professor:
+    build: ./Professor
+    container_name: professor
+    depends_on:
+      - eureka
+      - config-server
+      - professor-pg
+      - auth
+
+  aluno:
+    build: ./Aluno
+    container_name: aluno
+    depends_on:
+      - eureka
+      - config-server
+      - aluno-pg
+      - auth
+
+  turma:
+    build: ./Turma
+    container_name: turma
+    depends_on:
+      - eureka
+      - config-server
+      - turma-pg
+
+  nota:
+    build: ./Nota
+    container_name: nota
+    depends_on:
+      - eureka
+      - config-server
+      - nota-pg
+
+  # ---------- Gateway (único ponto de entrada externo) ----------
+
+  gateway:
+    build: ./Gateway
+    container_name: api-gateway
+    ports:
+      - "8765:8765"
+    depends_on:
+      - eureka
+      - config-server
+      - auth
+      - professor
+      - aluno
+      - turma
+      - nota

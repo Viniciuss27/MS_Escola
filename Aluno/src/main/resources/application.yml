@@ -15,3 +15,27 @@ spring:
   sql:
     init:
       mode: always
+
+server:
+  port: ${port:0}
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+    prefer-ip-address: true
+
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+security:
+  oauth2:
+    client:
+      client-id: name123
+      client-secret: secret123
