@@ -9,7 +9,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Viniciuss27/MS_HR_Config
+          uri: https://github.com/Viniciuss27/MS_Config_Escola
           default-label: main
           password: ${GIT_PASSWORD}
           username: ${GIT_USERNAMES}
